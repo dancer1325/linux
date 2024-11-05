@@ -97,41 +97,37 @@ Introduction
 Terminology
 -----------
 
-"cgroup" stands for "control group" and is never capitalized.  The
-singular form is used to designate the whole feature and also as a
-qualifier as in "cgroup controllers".  When explicitly referring to
-multiple individual control groups, the plural form "cgroups" is used.
+* "cgroup"
+  * == "control group" == "cgroup controllers"
+  * NEVER capitalized
+  * == WHOLE feature
+* "cgroups"
+  * plural form
 
 
 What is cgroup?
 ---------------
 
-cgroup is a mechanism to organize processes hierarchically and
-distribute system resources along the hierarchy in a controlled and
-configurable manner.
-
-cgroup is largely composed of two parts - the core and controllers.
-cgroup core is primarily responsible for hierarchically organizing
-processes.  A cgroup controller is usually responsible for
-distributing a specific type of system resource along the hierarchy
-although there are utility controllers which serve purposes other than
-resource distribution.
-
-cgroups form a tree structure and every process in the system belongs
-to one and only one cgroup.  All threads of a process belong to the
-same cgroup.  On creation, all processes are put in the cgroup that
-the parent process belongs to at the time.  A process can be migrated
-to another cgroup.  Migration of a process doesn't affect already
-existing descendant processes.
-
-Following certain structural constraints, controllers may be enabled or
-disabled selectively on a cgroup.  All controller behaviors are
-hierarchical - if a controller is enabled on a cgroup, it affects all
-processes which belong to the cgroups consisting the inclusive
-sub-hierarchy of the cgroup.  When a controller is enabled on a nested
-cgroup, it always restricts the resource distribution further.  The
-restrictions set closer to the root in the hierarchy can not be
-overridden from further away.
+* := mechanism to
+  * organize processes hierarchically
+  * distribute system resources -- along the -- hierarchy / controlled & configurable
+* == core + controllers
+  * cgroup core
+    * responsible for
+      * hierarchically organizing processes
+  * cgroup controller
+    * responsible for
+      * distributing a specific type of system resource -- along the -- hierarchy
+    * following certain structural constraints -> controllers may be enabled or disabled | cgroup
+    * behaviors are hierarchical
+      * == if a controller is enabled | cgroup -> affects ALL cgroup's processes
+      * if a controller is enabled | nested cgroup -> restricts the resource distribution further
+* cgroups
+  * 👀== tree structure / EVERY process in the system -- belongs to -- 1! cgroup 👀
+    * ALL threads of a process -- belong to the -- SAME cgroup
+    * | creation, ALL processes' cgroup == parent's cgroup that time
+    * a process -- can be migrated to -- another cgroup
+      * does NOT affect ALREADY existing descendant processes
 
 
 Basic Operations
@@ -140,23 +136,21 @@ Basic Operations
 Mounting
 --------
 
-Unlike v1, cgroup v2 has only single hierarchy.  The cgroup v2
-hierarchy can be mounted with the following mount command::
+* cgroup v2 has 1! hierarchy
+  * 👀!= 1 👀
+  * way to mount cgroup v2 hierarchy::
 
-  # mount -t cgroup2 none $MOUNT_POINT
+  `# mount -t cgroup2 none $MOUNT_POINT`
 
-cgroup2 filesystem has the magic number 0x63677270 ("cgrp").  All
-controllers which support v2 and are not bound to a v1 hierarchy are
-automatically bound to the v2 hierarchy and show up at the root.
-Controllers which are not in active use in the v2 hierarchy can be
-bound to other hierarchies.  This allows mixing v2 hierarchy with the
-legacy v1 multiple hierarchies in a fully backward compatible way.
-
-A controller can be moved across hierarchies only after the controller
-is no longer referenced in its current hierarchy.  Because per-cgroup
-controller states are destroyed asynchronously and controllers may
-have lingering references, a controller may not show up immediately on
-the v2 hierarchy after the final umount of the previous hierarchy.
+* cgroup2 filesystem has the magic number 0x63677270 ("cgrp")
+* ALL controllers / support v2 & NOT bound to a v1 hierarchy -> automatically bound to the v2 hierarchy & show up | root
+* Controllers / NOT in active use | v2 hierarchy -> can be bound to OTHER hierarchies
+  * -> allows mixing v2 hierarchy & legacy v1 multiple hierarchies / FULLY backward compatible
+  * "NOT in active use" == NO longer referenced
+    * Reason: 🧠
+      * per-cgroup controller states -- are destroyed -- asynchronously
+      * controllers may have lingering references 🧠
+* TODO:
 Similarly, a controller should be fully disabled to be moved out of
 the unified hierarchy and it may take some time for the disabled
 controller to become available for other hierarchies; furthermore, due
