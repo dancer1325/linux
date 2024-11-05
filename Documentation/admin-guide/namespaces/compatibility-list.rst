@@ -2,12 +2,7 @@
 Namespaces compatibility list
 =============================
 
-This document contains the information about the problems user
-may have when creating tasks living in different namespaces.
-
-Here's the summary. This matrix shows the known problems, that
-occur when tasks share some namespace (the columns) while living
-in different other namespaces (the rows):
+* problems creating tasks | DIFFERENT namespaces (columns & rows)
 
 ====	===	===	===	===	====	===
 -	UTS	IPC	VFS	PID	User	Net
@@ -20,6 +15,7 @@ User		 2	 2		 X
 Net						 X
 ====	===	===	===	===	====	===
 
+* TODO:
 1. Both the IPC and the PID namespaces provide IDs to address
    object inside the kernel. E.g. semaphore with IPCID or
    process group with pid.
