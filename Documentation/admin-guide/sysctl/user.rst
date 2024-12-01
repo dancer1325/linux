@@ -8,32 +8,27 @@ Copyright (c) 2016		Eric Biederman <ebiederm@xmission.com>
 
 ------------------------------------------------------------------------------
 
-This file contains the documentation for the sysctl files in
-/proc/sys/user.
+* goal
+    * "/proc/sys/user"'s sysctl files
 
-The files in this directory can be used to override the default
-limits on the number of namespaces and other objects that have
-per user per user namespace limits.
+* "/proc/sys/user"'s sysctl files
+    * uses
+        * override the default limits on
+            * # of namespaces / per-user
+            * # other objects / per-user, per user namespace
+    * Reason of the existence of these limits: 🧠stop programs /
+        * malfunction (creating a ridiculous number of objects) | BEFORE -- becomes a -- system wide problem 🧠
+    * previous default limits
+        * high enough / NO program -- should run into -- these limits
 
-The primary purpose of these limits is to stop programs that
-malfunction and attempt to create a ridiculous number of objects,
-before the malfunction becomes a system wide problem.  It is the
-intention that the defaults of these limits are set high enough that
-no program in normal operation should run into these limits.
+* creation of per user per user namespace objects -- are charged to the --
+    * user | user namespace /
+        * created the object &
+        * verified / < default per user limit | that user namespace
+    * ALL users / created user namespaces /
+        * verified / < per user limits | user namespaces of those users
 
-The creation of per user per user namespace objects are charged to
-the user in the user namespace who created the object and
-verified to be below the per user limit in that user namespace.
-
-The creation of objects is also charged to all of the users
-who created user namespaces the creation of the object happens
-in (user namespaces can be nested) and verified to be below the per user
-limits in the user namespaces of those users.
-
-This recursive counting of created objects ensures that creating a
-user namespace does not allow a user to escape their current limits.
-
-Currently, these files are in /proc/sys/user:
+* TODO:
 
 max_cgroup_namespaces
 =====================
